@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "source": "recorded",
+    "note": "Numbers recorded by the author from his own runs (validation) and the Kaggle leaderboard (late submission), 2026-11-22. Not computed by the export script."
+  },
+  "model": {
+    "algorithm": "LightGBM regressor",
+    "n_features": 19,
+    "target": "raw Sales",
+    "weights": "1/Sales^2 (normalised to mean 1)",
+    "learning_rate": 0.05,
+    "num_leaves": 127,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "best_iteration_validation": 4250,
+    "rounds_full_fit": 4675,
+    "seed": 42,
+    "categorical": ["StoreType", "Assortment", "StateHoliday", "PromoInterval"],
+    "excluded": ["Store ID", "last-year sales (lag-364)", "store x weekday aggregates"]
+  },
+  "validation": {
+    "window_days": 48,
+    "rmspe_all": 0.11616,
+    "rmspe_excl_event_stores": 0.11181,
+    "event_stores": [292, 909, 782],
+    "baseline_store_dow_mean": 0.22827,
+    "model_a_log_target": 0.12313,
+    "blend_50_50": 0.11838
+  },
+  "kaggle": {
+    "public": 0.10660,
+    "private": 0.11454,
+    "test_rows": 41088,
+    "closed_days_set_to_zero": 5984,
+    "open_day_pred_mean": 6823,
+    "train_open_mean": 6956,
+    "submission_type": "late submission"
+  },
+  "feature_experiments": {
+    "note": {
+      "en": "Feature experiments used the log-target model at learning rate 0.1 and were run before a categorical-mapping fix (one promo interval was spelled 'Sept' in the source data). Read the direction of each change, not the absolute level.",
+      "de": "Die Feature-Experimente nutzten das Log-Ziel-Modell mit Lernrate 0,1 und liefen vor einer Korrektur der Kategorie-Zuordnung (ein Promo-Intervall heißt in den Quelldaten 'Sept'). Maßgeblich ist die Richtung der Änderung, nicht das absolute Niveau."
+    },
+    "rows": [
+      {"id": "baseline", "label": {"en": "Baseline: store × weekday mean (no ML)", "de": "Basislinie: Mittelwert Filiale × Wochentag (ohne ML)"}, "rmspe": 0.22827, "best_iter": null, "selected": false},
+      {"id": "store_cat", "label": {"en": "Store ID as categorical", "de": "Filial-ID als Kategorie"}, "rmspe": 0.12468, "best_iter": 878, "selected": false},
+      {"id": "store_num", "label": {"en": "Store ID as number", "de": "Filial-ID als Zahl"}, "rmspe": 0.12636, "best_iter": 1497, "selected": false, "note": {"en": "Hit the 1,500-round cap", "de": "Rundenlimit (1.500) erreicht"}},
+      {"id": "no_store", "label": {"en": "No Store ID (selected feature set)", "de": "Ohne Filial-ID (gewähltes Feature-Set)"}, "rmspe": 0.12322, "best_iter": 1384, "selected": true},
+      {"id": "dow_in", "label": {"en": "+ store × weekday mean (in-sample)", "de": "+ Mittelwert Filiale × Wochentag (in-sample)"}, "rmspe": 0.13079, "best_iter": 1205, "selected": false},
+      {"id": "dow_oof", "label": {"en": "+ store × weekday mean (out-of-fold)", "de": "+ Mittelwert Filiale × Wochentag (out-of-fold)"}, "rmspe": 0.13315, "best_iter": 1635, "selected": false},
+      {"id": "oof_only", "label": {"en": "Store means computed out-of-fold only", "de": "Filialmittelwerte nur out-of-fold"}, "rmspe": 0.12805, "best_iter": 1661, "selected": false},
+      {"id": "lag364", "label": {"en": "+ last-year sales (lag-364)", "de": "+ Vorjahresumsatz (Lag-364)"}, "rmspe": 0.12847, "best_iter": 1422, "selected": false, "note": {"en": "Also worse excluding the 3 event stores (0.12442 vs 0.11906)", "de": "Auch ohne die 3 Ereignis-Filialen schlechter (0,12442 vs. 0,11906)"}}
+    ]
+  },
+  "loss_experiments": {
+    "note": {
+      "en": "Loss comparison at learning rate 0.1 (before the mapping fix) showed almost no difference; at learning rate 0.05 with many more rounds the weighted raw-target model (B) pulled clearly ahead.",
+      "de": "Der Verlustfunktions-Vergleich bei Lernrate 0,1 (vor der Korrektur) zeigte kaum Unterschiede; bei Lernrate 0,05 und deutlich mehr Runden lag das gewichtete Modell mit Rohziel (B) klar vorn."
+    },
+    "lr_0_1": [
+      {"label": {"en": "Log target, L2 loss", "de": "Log-Ziel, L2-Verlust"}, "rmspe": 0.12469, "best_iter": 891},
+      {"label": {"en": "A: log target, RMSPE early stopping", "de": "A: Log-Ziel, RMSPE-Early-Stopping"}, "rmspe": 0.12468, "best_iter": 878},
+      {"label": {"en": "B: raw target, 1/Sales² weights", "de": "B: Rohziel, 1/Umsatz²-Gewichte"}, "rmspe": 0.12432, "best_iter": 893},
+      {"label": {"en": "Blend A + B (50/50)", "de": "Mischung A + B (50/50)"}, "rmspe": 0.12279, "best_iter": null}
+    ],
+    "lr_0_05": [
+      {"label": {"en": "A: log target", "de": "A: Log-Ziel"}, "rmspe": 0.12313, "rmspe_clean": 0.11892, "best_iter": 3227},
+      {"label": {"en": "B: raw target, 1/Sales² weights (final)", "de": "B: Rohziel, 1/Umsatz²-Gewichte (final)"}, "rmspe": 0.11616, "rmspe_clean": 0.11181, "best_iter": 4250, "selected": true},
+      {"label": {"en": "Blend A + B (50/50)", "de": "Mischung A + B (50/50)"}, "rmspe": 0.11838, "rmspe_clean": 0.11406, "best_iter": null}
+    ],
+    "blend_grid": [
+      [0.0, 0.12313, 0.11892], [0.1, 0.12199, 0.11775], [0.2, 0.12094, 0.11668], [0.3, 0.11999, 0.11571],
+      [0.4, 0.11914, 0.11483], [0.5, 0.11838, 0.11406], [0.6, 0.11773, 0.11339], [0.7, 0.11718, 0.11283],
+      [0.8, 0.11673, 0.11238], [0.9, 0.11639, 0.11204], [1.0, 0.11616, 0.11181]
+    ]
+  },
+  "exception_notes": {
+    "summary": {
+      "en": "Stores 292, 909 and 782 had events inside the validation window that no feature built from history can anticipate. Excluding them, validation RMSPE falls from 0.11616 to 0.11181.",
+      "de": "Die Filialen 292, 909 und 782 hatten im Validierungsfenster Ereignisse, die kein aus der Historie gebildetes Feature vorhersagen kann. Ohne sie sinkt der Validierungs-RMSPE von 0,11616 auf 0,11181."
+    },
+    "stores": {
+      "292": {
+        "en": "Normally about 5,000–7,000 per open day. The week ending 5 July 2015 averaged 13,835 – more than double – followed by 3,005 the week after: a one-off spike and drop.",
+        "de": "Normalerweise etwa 5.000–7.000 pro Öffnungstag. In der Woche bis 5. Juli 2015 lag der Schnitt bei 13.835 – mehr als das Doppelte – danach bei 3.005: ein einmaliger Ausschlag mit anschließendem Einbruch."
+      },
+      "909": {
+        "en": "Normally about 9,000–15,000. Spike to 19,762 in the week ending 28 June, then only 3 open days, no open day in the week of 12 July, 1 open day the week after, and back to about 16,000 by 26 July: a temporary closure and reopening.",
+        "de": "Normalerweise etwa 9.000–15.000. Ausschlag auf 19.762 in der Woche bis 28. Juni, danach nur 3 Öffnungstage, kein Öffnungstag in der Woche des 12. Juli, 1 Öffnungstag in der Woche darauf und bis 26. Juli zurück bei etwa 16.000: vorübergehende Schließung und Wiedereröffnung."
+      },
+      "782": {
+        "en": "Normally about 5,000–6,500. A single dip to 3,230 in the week ending 28 June, otherwise normal.",
+        "de": "Normalerweise etwa 5.000–6.500. Ein einzelner Einbruch auf 3.230 in der Woche bis 28. Juni, sonst normal."
+      }
+    }
+  }
+}

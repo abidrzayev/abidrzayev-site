@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operations &amp; logistics – Abid Rzayev</title>
+<meta name="description" content="Order-to-delivery lead-time simulation: stage queues, bottleneck analysis, SLA breach risk and expediting trade-offs on a reproducible, seeded simulation.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Cpath d='M6 22l6-8 5 5 9-11' fill='none' stroke='%2338bdf8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-page="operations" data-root="../" data-title="ops.title">
+<main id="main" class="container">
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="ops.eyebrow"></div>
+    <h1 data-i18n="ops.h1"></h1>
+    <p class="lead" data-i18n="ops.lead"></p>
+    <div class="chips"><span class="chip sim" data-i18n="chip.sim"></span><span class="chip model" data-i18n="chip.model"></span></div>
+  </section>
+
+  <div class="callout warn"><strong data-i18n="ops.prov.h"></strong> <span data-i18n="ops.prov.p"></span></div>
+
+  <section id="o-sim">
+    <div class="section-title"><h2 data-i18n="ops.s1.h"></h2><span class="chip sim" data-i18n="chip.sim"></span></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="ops.s1.howto"></span></div>
+    <div class="card" style="margin-bottom:16px"><div class="controls" id="ctl-ops"></div></div>
+    <div class="grid grid-4" id="ops-kpis"></div>
+    <div class="grid grid-2" style="margin-top:16px">
+      <div class="card"><h3 data-i18n="ops.c.hist"></h3><div class="chart-box"><canvas id="ch-hist" role="img" aria-label="Distribution of order-to-delivery lead time"></canvas></div>
+        <p id="hist-note" class="muted" style="margin:10px 0 0;font-size:.88rem"></p></div>
+      <div class="card"><h3 data-i18n="ops.c.stage"></h3><div class="chart-box"><canvas id="ch-stage" role="img" aria-label="Service and waiting time per stage"></canvas></div>
+        <p id="stage-note" style="margin:10px 0 0"></p></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3 data-i18n="ops.c.tbl"></h3><div class="table-wrap"><table class="data" id="tbl-stage"></table></div></div>
+  </section>
+
+  <section id="o-exp">
+    <div class="section-title"><h2 data-i18n="ops.s2.h"></h2><span class="chip sim" data-i18n="chip.sim"></span></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="ops.s2.howto"></span></div>
+    <div class="card" style="margin-bottom:16px"><div class="controls" id="ctl-exp"></div></div>
+    <div class="grid grid-4" id="exp-kpis"></div>
+    <div class="card" style="margin-top:16px"><h3 data-i18n="ops.c.sweep"></h3><div class="chart-box"><canvas id="ch-sweep" role="img" aria-label="Cost per 1000 orders versus expedite threshold"></canvas></div>
+      <p id="sweep-note" style="margin:10px 0 0"></p></div>
+  </section>
+
+  <section id="method">
+    <div class="section-title"><h2 data-i18n="ops.m.h"></h2></div>
+    <div class="grid grid-2">
+      <div class="card"><h3 data-i18n="ops.m.f.h"></h3>
+        <p><span class="formula">ρ = λ · E[S] / c</span></p>
+        <p><span class="formula">W_q ≈ ρ^√(2(c+1)−1) / (c(1−ρ)) · (c_a² + c_s²)/2 · E[S]</span></p>
+        <p class="muted" style="font-size:.88rem" data-i18n="ops.m.f.legend"></p></div>
+      <div class="card"><h3 data-i18n="ops.m.a.h"></h3>
+        <ul class="clean muted"><li data-i18n="ops.m.a.1"></li><li data-i18n="ops.m.a.2"></li><li data-i18n="ops.m.a.3"></li><li data-i18n="ops.m.a.4"></li></ul></div>
+    </div>
+  </section>
+
+</main>
+<script src="../assets/js/vendor/chart.umd.min.js" defer></script>
+<script src="../assets/js/calc.js" defer></script>
+<script src="../assets/js/i18n.js" defer></script>
+<script src="../assets/js/charts.js" defer></script>
+<script src="../assets/js/pages/operations.js" defer></script>
+</body>
+</html>

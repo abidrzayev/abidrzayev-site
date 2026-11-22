@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sourcing &amp; procurement – Abid Rzayev</title>
+<meta name="description" content="Interactive sourcing tools on simulated data: weighted supplier scorecard, total cost of ownership, Pareto spend analysis, make-or-buy and dual-sourcing break-evens.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Cpath d='M6 22l6-8 5 5 9-11' fill='none' stroke='%2338bdf8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-page="sourcing" data-root="../" data-title="src.title">
+<main id="main" class="container">
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="src.eyebrow"></div>
+    <h1 data-i18n="src.h1"></h1>
+    <p class="lead" data-i18n="src.lead"></p>
+    <div class="chips"><span class="chip sim" data-i18n="chip.sim"></span><span class="chip model" data-i18n="chip.model"></span></div>
+    <div class="hero-actions">
+      <a class="btn small" href="#t-score" data-i18n="src.t1.h"></a><a class="btn small" href="#t-tco" data-i18n="src.t2.h"></a>
+      <a class="btn small" href="#t-pareto" data-i18n="src.t3.h"></a><a class="btn small" href="#t-mvb" data-i18n="src.t4.h"></a>
+      <a class="btn small" href="#t-dual" data-i18n="src.t5.h"></a>
+    </div>
+  </section>
+
+  <div class="callout warn"><strong data-i18n="src.prov.h"></strong> <span data-i18n="src.prov.p"></span></div>
+
+  <section id="t-score">
+    <div class="section-title"><h2 data-i18n="src.t1.h"></h2><span class="chip sim" data-i18n="chip.sim"></span></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="src.t1.howto"></span></div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><h3 data-i18n="src.t1.weights"></h3>
+        <div class="tabs" id="presets">
+          <button class="btn small" data-preset="balanced" data-i18n="src.preset.balanced"></button>
+          <button class="btn small" data-preset="cost" data-i18n="src.preset.cost"></button>
+          <button class="btn small" data-preset="risk" data-i18n="src.preset.risk"></button>
+          <button class="btn small" data-preset="quality" data-i18n="src.preset.quality"></button>
+        </div></div>
+      <div class="controls" id="ctl-score"></div>
+    </div>
+    <div class="grid grid-2">
+      <div class="card"><h3 data-i18n="src.t1.chart"></h3><div class="chart-box"><canvas id="ch-score" role="img" aria-label="Weighted supplier scores"></canvas></div>
+        <p id="score-note" style="margin:10px 0 0"></p></div>
+      <div class="card"><h3 data-i18n="src.t1.inputs"></h3><div class="table-wrap"><table class="data" id="tbl-score"></table></div>
+        <p class="muted" style="margin:10px 0 0;font-size:.85rem" data-i18n="src.t1.inputs.note"></p></div>
+    </div>
+  </section>
+
+  <section id="t-tco">
+    <div class="section-title"><h2 data-i18n="src.t2.h"></h2><span class="chip sim" data-i18n="chip.sim"></span></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="src.t2.howto"></span></div>
+    <div class="card" style="margin-bottom:16px"><div class="controls" id="ctl-tco"></div></div>
+    <div class="grid grid-2">
+      <div class="card"><h3 data-i18n="src.t2.chart"></h3><div class="chart-box"><canvas id="ch-tco" role="img" aria-label="Total cost of ownership per unit"></canvas></div></div>
+      <div class="card"><h3 data-i18n="src.t2.table"></h3><div class="table-wrap"><table class="data" id="tbl-tco"></table></div>
+        <p class="muted" style="margin:10px 0 0;font-size:.85rem" data-i18n="src.t2.note"></p></div>
+    </div>
+  </section>
+
+  <section id="t-pareto">
+    <div class="section-title"><h2 data-i18n="src.t3.h"></h2><span class="chip sim" data-i18n="chip.sim"></span></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="src.t3.howto"></span></div>
+    <div class="grid grid-4" id="pa-kpis" style="margin-bottom:16px"></div>
+    <div class="card">
+      <div class="card-head"><h3 data-i18n="src.t3.chart"></h3>
+        <label><span class="muted" data-i18n="src.t3.group"></span> <select id="pa-group">
+          <option value="item" data-i18n="src.t3.g.item"></option><option value="cat" data-i18n="src.t3.g.cat"></option><option value="sup" data-i18n="src.t3.g.sup"></option>
+        </select></label></div>
+      <div class="chart-box tall"><canvas id="ch-pareto" role="img" aria-label="Pareto chart of spend"></canvas></div>
+    </div>
+  </section>
+
+  <section id="t-mvb">
+    <div class="section-title"><h2 data-i18n="src.t4.h"></h2><span class="chip model" data-i18n="chip.model"></span></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="src.t4.howto"></span></div>
+    <div class="card" style="margin-bottom:16px"><div class="controls" id="ctl-mvb"></div></div>
+    <div class="grid grid-2">
+      <div class="card"><div class="chart-box"><canvas id="ch-mvb" role="img" aria-label="Make versus buy total cost"></canvas></div></div>
+      <div class="card"><div class="grid grid-2" id="mvb-kpis"></div><p id="mvb-note" style="margin:14px 0 0"></p></div>
+    </div>
+  </section>
+
+  <section id="t-dual">
+    <div class="section-title"><h2 data-i18n="src.t5.h"></h2><span class="chip model" data-i18n="chip.model"></span></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="src.t5.howto"></span></div>
+    <div class="card" style="margin-bottom:16px"><div class="controls" id="ctl-dual"></div></div>
+    <div class="grid grid-2">
+      <div class="card"><div class="chart-box"><canvas id="ch-dual" role="img" aria-label="Expected annual cost versus secondary supplier share"></canvas></div></div>
+      <div class="card"><div class="grid grid-2" id="dual-kpis"></div><p id="dual-note" style="margin:14px 0 0"></p></div>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="section-title"><h2 data-i18n="src.m.h"></h2></div>
+    <div class="grid grid-2">
+      <div class="card"><h3 data-i18n="src.m.f.h"></h3>
+        <p><span class="formula">TCO/unit = price + freight + duty + defects + inventory − financing + qualification</span></p>
+        <p><span class="formula">make cost = F + v·Q &nbsp;&nbsp; buy cost = p·Q &nbsp;&nbsp; Q* = F / (p − v)</span></p>
+        <p><span class="formula">E[cost](s) = V·((1−s)·p₁ + s·p₂) + q·W·(V/52)·(1 − min(1, κ·s))·λ·p₁</span></p>
+        <p class="muted" style="font-size:.88rem" data-i18n="src.m.f.legend"></p></div>
+      <div class="card"><h3 data-i18n="src.m.a.h"></h3>
+        <ul class="clean muted"><li data-i18n="src.m.a.1"></li><li data-i18n="src.m.a.2"></li><li data-i18n="src.m.a.3"></li><li data-i18n="src.m.a.4"></li></ul></div>
+    </div>
+  </section>
+
+</main>
+<script src="../assets/js/vendor/chart.umd.min.js" defer></script>
+<script src="../assets/js/calc.js" defer></script>
+<script src="../assets/js/i18n.js" defer></script>
+<script src="../assets/js/charts.js" defer></script>
+<script src="../assets/js/pages/sourcing.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rossmann demand forecasting – Abid Rzayev</title>
+<meta name="description" content="LightGBM demand forecast for 1,115 Rossmann stores: 0.11454 private RMSPE on Kaggle. Interactive dashboard with validation, promotion effects, closed days and exception stores.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Cpath d='M6 22l6-8 5 5 9-11' fill='none' stroke='%2338bdf8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-page="rossmann" data-root="../" data-title="ros.title">
+<main id="main" class="container">
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="ros.eyebrow"></div>
+    <h1 data-i18n="ros.h1"></h1>
+    <p class="lead" data-i18n="ros.lead"></p>
+    <div class="chips"><span class="chip real" data-i18n="chip.real"></span><span class="chip" data-i18n="ros.chip.data"></span></div>
+  </section>
+
+  <section><div class="grid grid-4" id="kpis"></div></section>
+
+  <section id="case">
+    <div class="section-title"><h2 data-i18n="ros.case.h"></h2></div>
+    <div class="grid grid-2">
+      <div class="card"><h3 data-i18n="ros.case.problem.h"></h3><p class="muted" data-i18n="ros.case.problem.p"></p></div>
+      <div class="card"><h3 data-i18n="ros.case.approach.h"></h3><p class="muted" data-i18n="ros.case.approach.p"></p></div>
+      <div class="card"><h3 data-i18n="ros.case.dec.h"></h3>
+        <ul class="clean muted">
+          <li data-i18n-html="ros.case.dec.1"></li><li data-i18n-html="ros.case.dec.2"></li>
+          <li data-i18n-html="ros.case.dec.3"></li><li data-i18n-html="ros.case.dec.4"></li>
+        </ul></div>
+      <div class="card"><h3 data-i18n="ros.case.fail.h"></h3><p class="muted" data-i18n="ros.case.fail.p"></p>
+        <h3 style="margin-top:1em" data-i18n="ros.case.limit.h"></h3><p class="muted" data-i18n="ros.case.limit.p"></p></div>
+    </div>
+  </section>
+
+  <section id="dashboard">
+    <div class="section-title"><h2 data-i18n="ros.dash.h"></h2><span class="chip real" data-i18n="chip.real"></span></div>
+    <div id="sample-banner"></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="ros.dash.howto"></span></div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><h3 data-i18n="ros.c.hist"></h3>
+        <div class="tabs" id="hist-range">
+          <button class="btn small" data-range="52" aria-pressed="true" data-i18n="ros.range.52"></button>
+          <button class="btn small" data-range="all" aria-pressed="false" data-i18n="ros.range.all"></button>
+        </div></div>
+      <div class="chart-box"><canvas id="ch-hist" role="img" aria-label="Weekly history and forecast"></canvas></div>
+      <p class="muted" style="margin:10px 0 0;font-size:.88rem" data-i18n="ros.c.hist.note"></p>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><h3 data-i18n="ros.c.val"></h3>
+        <label><span class="muted" data-i18n="ros.sel.store"></span> <select id="val-select"></select></label></div>
+      <div class="chart-box"><canvas id="ch-val" role="img" aria-label="Validation actual versus predicted"></canvas></div>
+      <p class="muted" style="margin:10px 0 0;font-size:.88rem" id="val-note"></p>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:16px">
+      <div class="card"><h3 data-i18n="ros.c.dow"></h3><div class="chart-box short"><canvas id="ch-dow" role="img" aria-label="RMSPE by weekday"></canvas></div>
+        <p class="muted" style="margin:10px 0 0;font-size:.88rem" data-i18n="ros.c.dow.note"></p></div>
+      <div class="card"><h3 data-i18n="ros.c.promo"></h3><div class="chart-box short"><canvas id="ch-promo" role="img" aria-label="Sales by weekday and promotion"></canvas></div>
+        <p class="muted" style="margin:10px 0 0;font-size:.88rem" data-i18n="ros.c.promo.note"></p></div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:16px">
+      <div class="card"><h3 data-i18n="ros.c.type"></h3><div class="table-wrap"><table class="data" id="tbl-type"></table></div></div>
+      <div class="card"><h3 data-i18n="ros.c.imp"></h3><div class="chart-box short"><canvas id="ch-imp" role="img" aria-label="Feature importance"></canvas></div></div>
+    </div>
+  </section>
+
+  <section id="selection">
+    <div class="section-title"><h2 data-i18n="ros.sel.h"></h2><span class="chip real" data-i18n="chip.real"></span></div>
+    <div class="callout"><strong data-i18n="howto"></strong> <span data-i18n="ros.sel.howto"></span></div>
+    <div class="grid grid-2">
+      <div class="card"><h3 data-i18n="ros.exp.feat.h"></h3><p class="muted" style="font-size:.88rem" id="feat-note"></p>
+        <div class="table-wrap"><table class="data" id="tbl-feat"></table></div></div>
+      <div class="card"><h3 data-i18n="ros.exp.loss.h"></h3><p class="muted" style="font-size:.88rem" id="loss-note"></p>
+        <div class="table-wrap"><table class="data" id="tbl-loss"></table></div>
+        <h3 style="margin-top:1.2em" data-i18n="ros.c.blend"></h3>
+        <div class="chart-box short"><canvas id="ch-blend" role="img" aria-label="Blend weight versus RMSPE"></canvas></div></div>
+    </div>
+  </section>
+
+  <section id="closed">
+    <div class="section-title"><h2 data-i18n="ros.closed.h"></h2></div>
+    <div class="grid grid-4" id="closed-kpis" style="margin-bottom:16px"></div>
+    <div class="card"><p class="muted" data-i18n="ros.closed.p"></p></div>
+  </section>
+
+  <section id="exceptions">
+    <div class="section-title"><h2 data-i18n="ros.exc.h"></h2><span class="chip real" data-i18n="chip.real"></span></div>
+    <p class="muted" id="exc-summary"></p>
+    <div class="card">
+      <div class="card-head"><h3 data-i18n="ros.exc.chart"></h3><div class="tabs" id="exc-tabs"></div></div>
+      <div class="chart-box"><canvas id="ch-exc" role="img" aria-label="Weekly sales of an exception store"></canvas></div>
+      <div class="grid grid-3" id="exc-kpis" style="margin-top:14px"></div>
+      <p id="exc-note" style="margin:14px 0 0"></p>
+    </div>
+  </section>
+
+  <section id="repro">
+    <div class="section-title"><h2 data-i18n="ros.repro.h"></h2></div>
+    <div class="card">
+      <p class="muted" data-i18n-html="ros.repro.p"></p>
+      <ul class="clean muted">
+        <li><code>scripts/solution_final.py</code> – <span data-i18n="ros.repro.1"></span></li>
+        <li><code>scripts/export_rossmann_json.py</code> – <span data-i18n="ros.repro.2"></span></li>
+        <li><code>data/model_card.json</code> – <span data-i18n="ros.repro.3"></span></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+<script src="../assets/js/vendor/chart.umd.min.js" defer></script>
+<script src="../assets/js/i18n.js" defer></script>
+<script src="../assets/js/charts.js" defer></script>
+<script src="../assets/js/pages/rossmann.js" defer></script>
+</body>
+</html>
